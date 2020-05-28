@@ -1,0 +1,10 @@
+{% extends 'cvapp/base.html' %}
+
+{% block content %}
+    <h2>New person</h2>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ personform.as_p }}
+        {{ contactform.as_p }}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+{% endblock %}

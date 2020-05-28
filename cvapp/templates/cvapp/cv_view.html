@@ -1,0 +1,9 @@
+{% extends 'cvapp/base.html' %}
+{% block content %}
+    {% for p in person %}
+    {{ p.full_name }} - {{ p.title }}<br>
+    {% endfor %}
+    {% for c in contact_details %}
+    {{ c.email }} - {{ c.city }}<br>
+    {% endfor %}
+{% endblock content %}
