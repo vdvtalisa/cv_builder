@@ -44,8 +44,6 @@ On the homepage, the user will fill out a form and upload a picture of themselve
 
 Once all the required fields are filled in and the form is validated, the user will be redirected to their cv.
 
-A user should still be able to go back to the form to make changes.
-
 ### View
 
 This will contain the data as given by the user.
@@ -59,6 +57,8 @@ How do you add styling to a Django template?
 Make sure the user registers and logs in so their info and template will be saved.
 
 ## Bonus:
+
+### A user should still be able to go back to the form to make changes.
 
 ### Make your forms dynamic so the user can add multiple work experience and education items
 
