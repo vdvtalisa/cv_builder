@@ -3,14 +3,14 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from .models import *
 from .forms import *
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, authenticate, logout
 
 
 def register_page(request):
-    form = UserCreationForm
-
-    if request.method == "POST":
+    if request.user.is_authenticated:
+        return redirect('cv_view')
+    if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
@@ -18,14 +18,35 @@ def register_page(request):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect('cv_form')
-    context = {'form': form}
-    return render(request, 'cvapp/register.html', context)
+            return redirect('/')
+        else:
+            return render(request, 'cvapp/register.html', {'form': form})
+    else:
+        form = UserCreationForm()
+        return render(request, 'cvapp/register.html', {'form': form})
 
 
 def login_page(request):
-    context = {}
-    return render(request, 'registration/login.html', context)
+    if request.user.is_authenticated:
+        return redirect('cv_view')
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('/')
+        else:
+            form = AuthenticationForm(request.POST)
+            return render(request, 'cvapp/login.html', {'form': form})
+    else:
+        form = AuthenticationForm()
+        return render(request, 'cvapp/login.html', {'form': form})
+
+
+def sign_out(request):
+    logout(request)
+    return redirect('/')
 
 
 def cv_form(request):
