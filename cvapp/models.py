@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class Person(models.Model):
     # start by filling out the info you need
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
@@ -23,7 +23,7 @@ class Person(models.Model):
 
 class ContactDetails(models.Model):
     # start by filling out the info you need 2
-    person = models.ForeignKey(Person, on_delete=models.CASCADE, null=True, blank=True)
+    person = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     postcode = models.CharField(max_length=200, null=True)
     address = models.CharField(max_length=200, null=True)
     city = models.CharField(max_length=200, null=True)
