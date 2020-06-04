@@ -8,14 +8,17 @@ from django.contrib.auth import login, authenticate
 
 
 def register_page(request):
-    form = UserCreationForm(request.POST)
-    if form.is_valid():
-        form.save()
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
-        user = authenticate(username=username, password=password)
-        login(request, user)
-        return redirect('home')
+    form = UserCreationForm
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('cv_form')
     context = {'form': form}
     return render(request, 'cvapp/register.html', context)
 
@@ -47,8 +50,8 @@ def cv_form(request):
 
 
 def cv_view(request):
-    person = Person.objects.all()
-    contact_details = ContactDetails.objects.all()
+    person = Person.objects.filter(user=request.user)
+    contact_details = ContactDetails.objects.filter(person=request.user)
     # education = Education.objects.all()
     # work_experience = WorkExperience.objects.all()
     # skills = Skills.objects.all()

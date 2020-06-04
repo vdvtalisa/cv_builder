@@ -23,7 +23,7 @@ class Person(models.Model):
 
 class ContactDetails(models.Model):
     # start by filling out the info you need 2
-    # person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, null=True, blank=True)
     postcode = models.CharField(max_length=200, null=True)
     address = models.CharField(max_length=200, null=True)
     city = models.CharField(max_length=200, null=True)
