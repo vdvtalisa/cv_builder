@@ -3,8 +3,27 @@
 {% block content %}
     <h2>New person</h2>
     <form method="POST" class="post-form">{% csrf_token %}
-        {{ personform.as_p }}
-        {{ contactform.as_p }}
+        <ul>{% if form.errors %}
+            {% for field in form %}
+
+                {% for error in field.errors %}
+                    {{ field.label }}: {{ error|escape }}
+                {% endfor %}
+
+            {% endfor %}
+        {% endif %}</ul>
+        {% for field in personform %}
+            {{ field.label }}
+            {{ field }}<br>
+        {% endfor %}
+        {% for field in contactform %}
+            {{ field.label }}
+            {{ field }}<br>
+        {% endfor %}
+        {{ educationform.as_p }}
+        {{ workform.as_p }}
+        {{ skillform.as_p }}
+        {{ hobbyform.as_p }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
 {% endblock %}

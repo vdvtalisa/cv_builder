@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -50,39 +51,80 @@ def sign_out(request):
 
 
 def cv_form(request):
-    personform = PersonForm(request.POST)
-    contactform = ContactForm(request.POST)
+    personform = PersonForm()
+    contactform = ContactForm()
+    educationform = EducationForm()
+    workform = WorkForm()
+    skillform = SkillForm()
+    hobbyform = HobbyForm()
+    if request.method == 'POST':
+        personform = PersonForm(request.POST)
+        contactform = ContactForm(request.POST)
+        educationform = EducationForm(request.POST)
+        workform = WorkForm(request.POST)
+        skillform = SkillForm(request.POST)
+        hobbyform = HobbyForm(request.POST)
 
-    if personform.is_valid():
-        personform.save()
+        if personform.is_valid():
+            form = personform.save()
+            form.user = request.user
+            form.save()
 
-    if contactform.is_valid():
-        contactform.save()
+        if contactform.is_valid():
+            form = contactform.save()
+            form.user = request.user
+            form.save()
 
-    if personform.is_valid() & contactform.is_valid():
-        return redirect('cv_view')
+        if educationform.is_valid():
+            form = educationform.save()
+            form.user = request.user
+            form.save()
+
+        if workform.is_valid():
+            form = workform.save()
+            form.user = request.user
+            form.save()
+
+        if skillform.is_valid():
+            form = skillform.save()
+            form.user = request.user
+            form.save()
+
+        if hobbyform.is_valid():
+            form = hobbyform.save()
+            form.user = request.user
+            form.save()
+
+        if personform.is_valid() & contactform.is_valid() & educationform.is_valid() & workform.is_valid() & skillform.is_valid() & hobbyform.is_valid():
+            return redirect('cv_view')
 
     context = {
         'personform': personform,
-        'contactform': contactform
+        'contactform': contactform,
+        'educationform': educationform,
+        'workform': workform,
+        'skillform': skillform,
+        'hobbyform': hobbyform
     }
 
     return render(request, 'cvapp/cv_form.html', context)
 
 
+@login_required
 def cv_view(request):
-    person = Person.objects.filter(user=request.user)
-    contact_details = ContactDetails.objects.filter(person=request.user)
-    # education = Education.objects.all()
-    # work_experience = WorkExperience.objects.all()
-    # skills = Skills.objects.all()
-    # hobbies = Hobbies.objects.all()
+    person = Person.objects.filter(user=request.user).latest('pk')
+    contact_details = ContactDetails.objects.filter(user=request.user).latest('pk')
+    education = Education.objects.filter(user=request.user)
+    work = WorkExperience.objects.filter(user=request.user)
+    skills = Skills.objects.filter(user=request.user)
+    hobbies = Hobbies.objects.filter(user=request.user)
 
     context = {'person': person,
-               'contact_details': contact_details
-               # 'education': education,
-               # 'work_experience': work_experience,
-               # 'skills': skills, 'hobbies': hobbies
+               'contact_details': contact_details,
+               'education': education,
+               'work': work,
+               'skills': skills,
+               'hobbies': hobbies
                }
 
     return render(request, 'cvapp/cv_view.html', context)
